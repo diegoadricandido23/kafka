@@ -3,21 +3,19 @@ Exemple de Kafka: Produtores, Consumidores e streams
 
 Exemplo seguido na forma Apache Kafka da Alura -> https://cursos.alura.com.br/formacao-kafka
 
-Configurações do Projeto:
+###Configurações do Projeto:
 
 <t>
   <li>Java 11</li>  
   <li>Maven</li>  
 
-Dependências do Projeto (NA RAIZ TEMOS UM docker-compose):
+###Dependências do Projeto (NA RAIZ TEMOS UM docker-compose):
 
-<p>
-  <li>Zookeeper *latest</li>  
-  <li>Kafka *latest</li>  
-  <li>Kafkadrp (Ferramenta Visual para gerência do Kafka) *latest</li>  
-</p>
+<p><li>Zookeeper *latest</li>  
+<p><li>Kafka *latest</li>  
+<p><li>Kafkadrp (Ferramenta Visual para gerência do Kafka) *latest</li>  
 
-Iremos encontrar os seguintes serviços:
+###Iremos encontrar os seguintes serviços:
 
 <li>commons-kafka -> Possui o Produtor(KafkaDispatcher) e Consumidor(KafkaService) das mensagens.</li>
 <li>service-fraud-detector -> Responsábel por "Produzir" as mensagens de 'Nova Venda' e 'Email'.</li>
