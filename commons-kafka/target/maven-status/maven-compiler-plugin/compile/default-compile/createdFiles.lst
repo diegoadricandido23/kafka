@@ -1,0 +1,6 @@
+br/com/diego/kafka/GsonDeserializer.class
+br/com/diego/kafka/KafkaDispatcher.class
+br/com/diego/kafka/Email.class
+br/com/diego/kafka/KafkaService.class
+br/com/diego/kafka/GsonSerializer.class
+br/com/diego/kafka/ConsumerFunction.class

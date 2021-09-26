@@ -1,0 +1,6 @@
+/home/dcandido/Documentos/Estudo/Kafka/commons-kafka/src/main/java/br/com/diego/kafka/ConsumerFunction.java
+/home/dcandido/Documentos/Estudo/Kafka/commons-kafka/src/main/java/br/com/diego/kafka/KafkaService.java
+/home/dcandido/Documentos/Estudo/Kafka/commons-kafka/src/main/java/br/com/diego/kafka/KafkaDispatcher.java
+/home/dcandido/Documentos/Estudo/Kafka/commons-kafka/src/main/java/br/com/diego/kafka/GsonSerializer.java
+/home/dcandido/Documentos/Estudo/Kafka/commons-kafka/src/main/java/br/com/diego/kafka/GsonDeserializer.java
+/home/dcandido/Documentos/Estudo/Kafka/commons-kafka/src/main/java/br/com/diego/kafka/Email.java

@@ -1,0 +1,31 @@
+#Kafka (porta 9092)
+#Kafdrop (porta 19000)
+
+docker-compose logs zookeeper | grep -i binding
+docker-compose logs kafka | grep -i started
+
+Entrando no Kafka
+docker exec -it kafka_kafka_1 bash
+
+CRIANDO TÓPICO
+kafka-topics --create --topic TESTE_TOPICO --partitions 1 --replication-factor 1 --if-not-exists --zookeeper localhost:32181
+
+CONFIRMAR SE TOPICO CRIANDO
+  kafka-topics --describe --bootstrap-server localhost:9092
+  
+
+ docker exec -it kafka_kafka_1 /kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --describe --topic teste
+
+Produzindo mensagens com o Producer
+  bash -c "seq 100 | kafka-console-producer --request-required-acks 1 --broker-list localhost:29092 --topic TESTE_TOPICO && echo 'Produced 100 messages.'"
+
+Consumindo mensagens com o Consumer
+  kafka-console-consumer --bootstrap-server localhost:29092 --topic ECOMMERCE_NEW_ORDER --from-beginning --max-messages 100
+
+
+Kafka Connect 
+Aumentar Repartition de um Topic
+docker exec kafka_kafka_1 kafka-topics --alter --zookeeper zookeeper:2181 --topic ECOMMERCE_NEW_ORDER --partitions 3
+
+Descrever os grupos
+docker exec kafka_kafka_1 kafka-consumer-groups --all-groups --bootstrap-server localhost:9092 --describe
