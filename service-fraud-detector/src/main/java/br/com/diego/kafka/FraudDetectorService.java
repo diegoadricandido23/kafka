@@ -4,11 +4,14 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class FraudDetectorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FraudDetectorService.class);
+    private final KafkaDispatcher<Order> orderDispatcher = new KafkaDispatcher<>();
 
     public static void main(String[] args) {
         var fraudService = new FraudDetectorService();
@@ -21,7 +24,7 @@ public class FraudDetectorService {
         }
     }
 
-    private void parse(ConsumerRecord<String, Order> record) {
+    private void parse(ConsumerRecord<String, Order> record) throws ExecutionException, InterruptedException {
         LOGGER.info("-------------------------");
         LOGGER.info("PROCESSING NEW ORDER, CHECKING FOR FRAUD");
         LOGGER.info("RECORD KEY: {}", record.key());//DEFINE EM QUAL PARTICAO IRA CAIR A MENSAGEM
@@ -33,6 +36,19 @@ public class FraudDetectorService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        var order = record.value();
+        if(isFraud(order)) {
+            LOGGER.info("ORDER IS A FRAUD: ", order);
+            orderDispatcher.send("ECOMMERCE_ORDER_REJECTED", order.getUserId(), order);
+        } else {
+            LOGGER.info("APPROVED: {}", order);
+            orderDispatcher.send("ECOMMERCE_ORDER_APPROVED", order.getUserId(), order);
+        }
+
         LOGGER.info("PROCESSADO COM SUCESSO");
+    }
+
+    private boolean isFraud(Order order) {
+        return order.getAmount().compareTo(new BigDecimal("4500"))  >= 0;
     }
 }

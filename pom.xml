@@ -17,6 +17,8 @@
         <module>service-new-order</module>
         <module>commons-kafka</module>
         <module>service-fraud-detector</module>
+        <module>service-reading-report</module>
+        <module>service-users</module>
     </modules>
 
     <properties>

@@ -19,12 +19,13 @@ public class NewOrderMain {
                     var key = UUID.randomUUID().toString();
                     var orderId = UUID.randomUUID().toString();
                     var amount = Math.random() * 5000 +1;
+                    var email = Math.random()+ "@email.com";
 
-                    var order = new Order(key, orderId, BigDecimal.valueOf(amount));
+                    var order = new Order(key, orderId, email, BigDecimal.valueOf(amount));
                     orderDispatcher.send("ECOMMERCE_NEW_ORDER", orderId, order);
 
-                    var email = "Thank you for order! We are processing your order";
-                    emailDispatcher.send("ECOMMERCE_SEND_EMAIL", key, email);
+                    var emailCode = "Thank you for order! We are processing your order";
+                    emailDispatcher.send("ECOMMERCE_SEND_EMAIL", key, emailCode);
                 }
             }
         }

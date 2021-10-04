@@ -8,11 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 class KafkaService<T> implements Closeable {
@@ -44,7 +46,11 @@ class KafkaService<T> implements Closeable {
             if (!records.isEmpty()) {
                 LOGGER.info("ENCONTREI {} REGISTROS", records.count());
                 records.forEach(record -> {
-                    parse.consume(record);
+                    try {
+                        parse.consume(record);
+                    } catch (Exception e) {
+                        LOGGER.error(e.getMessage());
+                    }
 
                 });
             }
