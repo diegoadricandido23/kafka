@@ -1,6 +1,8 @@
 #Kafka (porta 9092)
 #Kafdrop (porta 19000)
 #ISR REPRESENTA QUAIS REPLICAS QUE ESTÃO ATUALIZADAS
+#properties.setProperty(ProducerConfig.ACKS_CONFIG, "all"); - Se vc tiver várias replicas só será refletido caso seu
+    ACKS esteja como all
 
 docker-compose logs zookeeper | grep -i binding
 docker-compose logs kafka | grep -i started
