@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.UUID;
 
 public class CreateUserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateUserService.class);
@@ -44,15 +45,15 @@ public class CreateUserService {
 
         var order = record.value();
         if(isNewUser(order.getEmail())) {
-            insertNewUser(order.getUserId(), order.getEmail());
+            insertNewUser(order.getEmail());
         }
 
         LOGGER.info("PROCESSADO COM SUCESSO");
     }
 
-    private void insertNewUser(String uuid, String email) throws SQLException {
+    private void insertNewUser(String email) throws SQLException {
         var insert = connection.prepareStatement("INSERT INTO USERS (uuid, email)" + " VALUES (?,?)");
-        insert.setString(1, uuid);
+        insert.setString(1, UUID.randomUUID().toString());
         insert.setString(2, email);
         LOGGER.info("USUARIO uuid E {} ADICIONADOS", email);
     }

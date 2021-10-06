@@ -39,10 +39,10 @@ public class FraudDetectorService {
         var order = record.value();
         if(isFraud(order)) {
             LOGGER.info("ORDER IS A FRAUD: ", order);
-            orderDispatcher.send("ECOMMERCE_ORDER_REJECTED", order.getUserId(), order);
+            orderDispatcher.send("ECOMMERCE_ORDER_REJECTED", order.getEmail(), order);
         } else {
             LOGGER.info("APPROVED: {}", order);
-            orderDispatcher.send("ECOMMERCE_ORDER_APPROVED", order.getUserId(), order);
+            orderDispatcher.send("ECOMMERCE_ORDER_APPROVED", order.getEmail(), order);
         }
 
         LOGGER.info("PROCESSADO COM SUCESSO");
