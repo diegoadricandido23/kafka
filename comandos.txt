@@ -1,5 +1,6 @@
 #Kafka (porta 9092)
 #Kafdrop (porta 19000)
+#ISR REPRESENTA QUAIS REPLICAS QUE ESTÃO ATUALIZADAS
 
 docker-compose logs zookeeper | grep -i binding
 docker-compose logs kafka | grep -i started
@@ -29,3 +30,8 @@ docker exec kafka_kafka_1 kafka-topics --alter --zookeeper zookeeper:2181 --topi
 
 Descrever os grupos
 docker exec kafka_kafka_1 kafka-consumer-groups --all-groups --bootstrap-server localhost:9092 --describe
+
+Alterando a Replicações
+no config add
+    default.replication.factor = 2
+docker exec -it kafka_kafka_1 /kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --alter --topic ECOMMERCE_NEW_ORDER --parttitions 3 --replication-factor 2
