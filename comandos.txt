@@ -33,5 +33,7 @@ docker exec kafka_kafka_1 kafka-consumer-groups --all-groups --bootstrap-server 
 
 Alterando a Replicações
 no config add
-    default.replication.factor = 2
-docker exec -it kafka_kafka_1 /kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --alter --topic ECOMMERCE_NEW_ORDER --parttitions 3 --replication-factor 2
+    default.replication.factor = 3
+    offsets.topic.replication.factor = 3
+    transaction.state.log.replication.factor= 3
+docker exec -it kafka_kafka_1 /kafka/bin/kafka-topics.sh --zookeeper zookeeper:2181 --alter --topic ECOMMERCE_NEW_ORDER --parttitions 3 --replication-factor 3
