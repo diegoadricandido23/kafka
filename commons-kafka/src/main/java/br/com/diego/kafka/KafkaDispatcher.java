@@ -16,14 +16,15 @@ public class KafkaDispatcher<T> implements Closeable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaDispatcher.class);
 
-    private final KafkaProducer<String, T> producer;
+    private final KafkaProducer<String, Message<T>> producer;
 
     KafkaDispatcher() {
         this.producer = new KafkaProducer<>(properties());
 
     }
 
-    void send(String topic, String key, T value) throws ExecutionException, InterruptedException {
+    void send(String topic, String key, T payload) throws ExecutionException, InterruptedException {
+        var value = new Message<>(new Correlationid(), payload);
         var record = new ProducerRecord<>(topic, key, value);
         Callback callback = (data, ex) -> {
             if (ex != null) {

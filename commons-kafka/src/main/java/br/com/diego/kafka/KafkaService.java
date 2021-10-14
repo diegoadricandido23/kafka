@@ -8,33 +8,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 class KafkaService<T> implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaService.class);
-    private final KafkaConsumer<String, T> consumer;
+    private final KafkaConsumer<String, Message<T>> consumer;
     private final ConsumerFunction parse;
 
-    KafkaService(String groupId, String topic, ConsumerFunction parse, Class<T> type, Map<String, String> props) {
+    KafkaService(String groupId, String topic, ConsumerFunction<T> parse, Class<T> type, Map<String, String> props) {
         this(parse, groupId, type, props);
         consumer.subscribe(Collections.singletonList(topic));
 
     }
 
-    KafkaService(String groupId, Pattern topic, ConsumerFunction parse, Class<T> type, Map<String, String> props) {
+    KafkaService(String groupId, Pattern topic, ConsumerFunction<T> parse, Class<T> type, Map<String, String> props) {
         this(parse, groupId, type, props);
         consumer.subscribe(topic);
 
     }
 
-    private KafkaService(ConsumerFunction parse, String groupId, Class<T> type, Map<String, String> props) {
+    private KafkaService(ConsumerFunction<T> parse, String groupId, Class<T> type, Map<String, String> props) {
         this.parse = parse;
         this.consumer = new KafkaConsumer<>(getProperties(type, groupId, props));
 
@@ -65,7 +63,6 @@ class KafkaService<T> implements Closeable {
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, GsonDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         properties.setProperty(ConsumerConfig.CLIENT_ID_CONFIG, UUID.randomUUID().toString());
-        properties.setProperty(GsonDeserializer.TYPE_CONFIG, type.getName());
         properties.putAll(overrideProps);
         return properties;
     }
