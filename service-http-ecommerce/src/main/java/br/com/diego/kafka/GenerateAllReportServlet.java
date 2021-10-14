@@ -24,7 +24,11 @@ public class GenerateAllReportServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         try {
-            batchDispatcher.send("SEND_MESSAGE_TO_ALL_USERS", "USER_GENERATE_READING_REPORT", "USER_GENERATE_READING_REPORT");
+            batchDispatcher.send(
+                    "ECOMMERCE_SEND_MESSAGE_TO_ALL_USERS",
+                    "ECOMMERCE_USER_GENERATE_READING_REPORT",
+                    new Correlationid(GenerateAllReportServlet.class.getSimpleName()),
+                    "ECOMMERCE_USER_GENERATE_READING_REPORT");
 
             LOGGER.info("SENT GENERATE REPORT TO ALL USERS");
             resp.setStatus(HttpServletResponse.SC_OK);

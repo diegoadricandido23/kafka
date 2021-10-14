@@ -22,10 +22,16 @@ public class NewOrderMain {
                     var email = Math.random() + "@email.com";
 
                     var order = new Order(orderId, email, BigDecimal.valueOf(amount));
-                    orderDispatcher.send("ECOMMERCE_NEW_ORDER", email, order);
+                    orderDispatcher.send("ECOMMERCE_NEW_ORDER",
+                            email,
+                            new Correlationid(NewOrderMain.class.getSimpleName()),
+                            order);
 
                     var emailCode = "Thank you for order! We are processing your order";
-                    emailDispatcher.send("ECOMMERCE_SEND_EMAIL", email, emailCode);
+                    emailDispatcher.send("ECOMMERCE_SEND_EMAIL",
+                            email,
+                            new Correlationid(NewOrderMain.class.getSimpleName()),
+                            emailCode);
                 }
             }
         }

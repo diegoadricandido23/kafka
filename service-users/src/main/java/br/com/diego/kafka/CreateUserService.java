@@ -38,12 +38,12 @@ public class CreateUserService {
         }
     }
 
-    private void parse(ConsumerRecord<String, Order> record) throws SQLException {
+    private void parse(ConsumerRecord<String, Message<Order>> record) throws SQLException {
         LOGGER.info("-------------------------");
         LOGGER.info("PROCESSING NEW ORDER, CHECKING FOR NEW USER");
         LOGGER.info("RECORD VAL: {}", record.value());
 
-        var order = record.value();
+        var order = record.value().getPayload();
         if(isNewUser(order.getEmail())) {
             insertNewUser(order.getEmail());
         }

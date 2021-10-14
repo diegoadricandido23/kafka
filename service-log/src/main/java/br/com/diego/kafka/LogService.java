@@ -24,11 +24,11 @@ public class LogService {
         }
     }
 
-    private void parse(ConsumerRecord<String, String> record) {
+    private void parse(ConsumerRecord<String, Message<String>> record) {
         LOGGER.info("-------------------------");
         LOGGER.info("LOG: {}", record.topic());
         LOGGER.info(record.key());
-        LOGGER.info(record.value());
+        LOGGER.info(String.valueOf(record.value()));
         LOGGER.info(String.valueOf(record.partition()));
         LOGGER.info(String.valueOf(record.offset()));
     }

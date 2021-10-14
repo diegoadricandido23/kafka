@@ -22,4 +22,8 @@ public class Message<T> {
     public T getPayload() {
         return payload;
     }
+
+    public Correlationid contiueWith(String simpleName) {
+        return new Correlationid(id + "-" + simpleName);
+    }
 }

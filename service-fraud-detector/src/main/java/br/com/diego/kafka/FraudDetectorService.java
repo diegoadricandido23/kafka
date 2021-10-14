@@ -15,7 +15,7 @@ public class FraudDetectorService {
 
     public static void main(String[] args) {
         var fraudService = new FraudDetectorService();
-        try (var service = new KafkaService<>(FraudDetectorService.class.getSimpleName(),
+        try (var service = new KafkaService(FraudDetectorService.class.getSimpleName(),
                 "ECOMMERCE_NEW_ORDER",
                 fraudService::parse,
                 Order.class,
@@ -24,25 +24,33 @@ public class FraudDetectorService {
         }
     }
 
-    private void parse(ConsumerRecord<String, Order> record) throws ExecutionException, InterruptedException {
+    private void parse(ConsumerRecord<String, Message<Order>> record) throws ExecutionException, InterruptedException {
         LOGGER.info("-------------------------");
         LOGGER.info("PROCESSING NEW ORDER, CHECKING FOR FRAUD");
         LOGGER.info("RECORD KEY: {}", record.key());//DEFINE EM QUAL PARTICAO IRA CAIR A MENSAGEM
         LOGGER.info("RECORD VAL: {}", record.value());
         LOGGER.info("PARTITION : {}", record.partition());
         LOGGER.info("OFFSET    : {}", record.offset());
+
+        var message = record.value();
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        var order = record.value();
+        var order = message.getPayload();
         if(isFraud(order)) {
             LOGGER.info("ORDER IS A FRAUD: ", order);
-            orderDispatcher.send("ECOMMERCE_ORDER_REJECTED", order.getEmail(), order);
+            orderDispatcher.send("ECOMMERCE_ORDER_REJECTED",
+                    order.getEmail(),
+                    message.contiueWith(FraudDetectorService.class.getSimpleName()),
+                    order);
         } else {
             LOGGER.info("APPROVED: {}", order);
-            orderDispatcher.send("ECOMMERCE_ORDER_APPROVED", order.getEmail(), order);
+            orderDispatcher.send("ECOMMERCE_ORDER_APPROVED",
+                    order.getEmail(),
+                    message.contiueWith(FraudDetectorService.class.getSimpleName()),
+                    order);
         }
 
         LOGGER.info("PROCESSADO COM SUCESSO");

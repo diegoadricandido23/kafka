@@ -17,7 +17,7 @@ public class ReadingReportService {
     public static void main(String[] args) {
         var fraudService = new ReadingReportService();
         try (var service = new KafkaService<>(ReadingReportService.class.getSimpleName(),
-                "USER_GENERATE_READING_REPORT",
+                "ECOMMERCE_USER_GENERATE_READING_REPORT",
                 fraudService::parse,
                 User.class,
                 Map.of())) {
