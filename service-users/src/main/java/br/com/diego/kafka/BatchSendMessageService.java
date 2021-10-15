@@ -48,10 +48,11 @@ public class BatchSendMessageService {
         LOGGER.info("TOPIC VAL: {}", message.getPayload());
 
         for(User user : getAllUsers()) {
-            userDispatcher.send(message.getPayload(),
+            userDispatcher.sendAsync(message.getPayload(),
                     user.getUuid(),
                     message.getId().continueWith(BatchSendMessageService.class.getSimpleName()),
                     user);
+            LOGGER.info("SEND TO {}", user);
         }
 
 
