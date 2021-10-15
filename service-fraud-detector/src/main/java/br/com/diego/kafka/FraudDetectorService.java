@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -13,7 +14,7 @@ public class FraudDetectorService {
     private static final Logger LOGGER = LoggerFactory.getLogger(FraudDetectorService.class);
     private final KafkaDispatcher<Order> orderDispatcher = new KafkaDispatcher<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException, SQLException {
         var fraudService = new FraudDetectorService();
         try (var service = new KafkaService(FraudDetectorService.class.getSimpleName(),
                 "ECOMMERCE_NEW_ORDER",

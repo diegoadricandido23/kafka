@@ -7,14 +7,16 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class ReadingReportService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReadingReportService.class);
     private static final Path SOURCE = Path.of("sr/main/resources/report.txt");
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
         var fraudService = new ReadingReportService();
         try (var service = new KafkaService<>(ReadingReportService.class.getSimpleName(),
                 "ECOMMERCE_USER_GENERATE_READING_REPORT",

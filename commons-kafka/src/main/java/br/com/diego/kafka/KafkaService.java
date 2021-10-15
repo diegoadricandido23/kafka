@@ -8,11 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 class KafkaService<T> implements Closeable {
@@ -38,21 +40,32 @@ class KafkaService<T> implements Closeable {
 
     }
 
-    void run() {
-        while (true) {
-            var records = consumer.poll(Duration.ofMillis(100));
-            if (!records.isEmpty()) {
-                LOGGER.info("ENCONTREI {} REGISTROS", records.count());
-                records.forEach(record -> {
-                    try {
-                        parse.consume(record);
-                    } catch (Exception e) {
-                        LOGGER.error(e.getMessage());
-                    }
+    void run() throws ExecutionException, InterruptedException, SQLException {
+        try(var deadLetter = new KafkaDispatcher<>()) {
+            while (true) {
+                var records = consumer.poll(Duration.ofMillis(100));
+                if (!records.isEmpty()) {
+                    LOGGER.info("FOUND {} RECORDS", records.count());
+                    records.forEach(record -> {
+                        try {
+                            parse.consume(record);
+                        } catch (Exception e) {
+                            LOGGER.error(e.getMessage());
+                            var message = record.value();
+                            try {
+                                deadLetter.send("ECOMMERCE_DEADLETTER",
+                                        message.getId().toString(),
+                                        message.getId().continueWith("DEADLETTER"),
+                                        new GsonSerializer().serialize("", message));
+                            } catch (ExecutionException | InterruptedException ex) {
+                                LOGGER.error(ex.getMessage());
+                                throw new RuntimeException(ex);
+                            }
+                        }
 
-                });
+                    });
+                }
             }
-
         }
     }
 

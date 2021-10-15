@@ -6,13 +6,15 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
         var emailService = new EmailService();
         try (final KafkaService kafkaService = new KafkaService(
                 EmailService.class.getSimpleName(),
