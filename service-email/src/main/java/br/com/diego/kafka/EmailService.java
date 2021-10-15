@@ -18,13 +18,12 @@ public class EmailService {
                 EmailService.class.getSimpleName(),
                 "ECOMMERCE_SEND_EMAIL",
                 emailService::parse,
-                String.class,
                 Map.of(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName()))) {
             kafkaService.run();
         }
     }
 
-    private void parse(ConsumerRecord<String, String> record) {
+    private void parse(ConsumerRecord<String, Message<String>> record) {
         LOGGER.info("-------------------------");
         LOGGER.info("SENDING EMAIL, CHECKING FOR FRAUD");
         LOGGER.info("RECORD KEY: {}", record.key());//DEFINI EM QUAL PARTICAO IRA CAIR A MENSAGEM
