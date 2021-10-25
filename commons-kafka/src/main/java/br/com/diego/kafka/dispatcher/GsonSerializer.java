@@ -1,5 +1,7 @@
-package br.com.diego.kafka;
+package br.com.diego.kafka.dispatcher;
 
+import br.com.diego.kafka.Message;
+import br.com.diego.kafka.MessageAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.kafka.common.serialization.Serializer;

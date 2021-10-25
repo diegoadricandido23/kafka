@@ -1,5 +1,8 @@
-package br.com.diego.kafka;
+package br.com.diego.kafka.consumer;
 
+import br.com.diego.kafka.Message;
+import br.com.diego.kafka.dispatcher.GsonSerializer;
+import br.com.diego.kafka.dispatcher.KafkaDispatcher;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -17,18 +20,18 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
-class KafkaService<T> implements Closeable {
+public class KafkaService<T> implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaService.class);
     private final KafkaConsumer<String, Message<T>> consumer;
     private final ConsumerFunction parse;
 
-    KafkaService(String groupId, String topic, ConsumerFunction<T> parse, Map<String, String> props) {
+    public KafkaService(String groupId, String topic, ConsumerFunction<T> parse, Map<String, String> props) {
         this(parse, groupId, props);
         consumer.subscribe(Collections.singletonList(topic));
 
     }
 
-    KafkaService(String groupId, Pattern topic, ConsumerFunction<T> parse, Map<String, String> props) {
+    public KafkaService(String groupId, Pattern topic, ConsumerFunction<T> parse, Map<String, String> props) {
         this(parse, groupId, props);
         consumer.subscribe(topic);
 
@@ -40,7 +43,7 @@ class KafkaService<T> implements Closeable {
 
     }
 
-    void run() throws ExecutionException, InterruptedException, SQLException {
+    public void run() throws ExecutionException, InterruptedException, SQLException {
         try(var deadLetter = new KafkaDispatcher<>()) {
             while (true) {
                 var records = consumer.poll(Duration.ofMillis(100));

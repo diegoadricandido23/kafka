@@ -1,5 +1,6 @@
 package br.com.diego.kafka;
 
+import br.com.diego.kafka.dispatcher.KafkaDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

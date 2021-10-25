@@ -1,5 +1,6 @@
 package br.com.diego.kafka;
 
+import br.com.diego.kafka.dispatcher.KafkaDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,5 +1,7 @@
-package br.com.diego.kafka;
+package br.com.diego.kafka.dispatcher;
 
+import br.com.diego.kafka.Correlationid;
+import br.com.diego.kafka.Message;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
@@ -20,14 +22,14 @@ public class KafkaDispatcher<T> implements Closeable {
         this.producer = new KafkaProducer<>(properties());
     }
 
-    void send(String topic, String key, Correlationid id, T payload) throws ExecutionException, InterruptedException {
+    public void send(String topic, String key, Correlationid id, T payload) throws ExecutionException, InterruptedException {
         final Future<RecordMetadata> future = sendAsync(topic, key, id, payload);
         future.get();
         //O GET SEGURA O CONSUMIDOR
     }
 
     Future<RecordMetadata> sendAsync(String topic, String key, Correlationid id, T payload) throws InterruptedException, ExecutionException {
-        var value = new Message<>(id, payload);
+        var value = new Message<>(id.continueWith("_"+topic), payload);
         var record = new ProducerRecord<>(topic, key, value);
         Callback callback = (data, ex) -> {
             if (ex != null) {

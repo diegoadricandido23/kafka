@@ -1,5 +1,6 @@
-package br.com.diego.kafka;
+package br.com.diego.kafka.consumer;
 
+import br.com.diego.kafka.Message;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.io.IOException;
