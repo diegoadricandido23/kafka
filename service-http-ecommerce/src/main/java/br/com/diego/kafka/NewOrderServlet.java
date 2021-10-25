@@ -17,13 +17,11 @@ public class NewOrderServlet extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(NewOrderServlet.class);
 
     private final KafkaDispatcher orderDispatcher = new KafkaDispatcher<Order>();
-    private final KafkaDispatcher emailDispatcher = new KafkaDispatcher<String>();
 
     @Override
     public void destroy() {
         super.destroy();
         orderDispatcher.close();
-        emailDispatcher.close();
     }
 
     @Override
@@ -40,12 +38,6 @@ public class NewOrderServlet extends HttpServlet {
                     email,
                     new Correlationid(NewOrderServlet.class.getSimpleName()),
                     order);
-
-            var emailCode = "Thank you for order! We are processing your order";
-            emailDispatcher.send("ECOMMERCE_SEND_EMAIL",
-                    email,
-                    new Correlationid(NewOrderServlet.class.getSimpleName()),
-                    emailCode);
 
             LOGGER.info("NEW ORDEM SENT SUCCESSFULLY");
             resp.setStatus(HttpServletResponse.SC_OK);

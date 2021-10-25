@@ -14,26 +14,14 @@ public class NewOrderMain {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         try (var orderDispatcher = new KafkaDispatcher<Order>()) {
-            try (var emailDispatcher = new KafkaDispatcher<String>()) {
+            for (var i = 0; i < 10; i++) {
+                LOGGER.info("GERANDO NOVA VENDA: {}", i);
+                var orderId = UUID.randomUUID().toString();
+                var amount = Math.random() * 5000 + 1;
+                var email = Math.random() + "@email.com";
 
-                for (var i = 0; i < 10; i++) {
-                    LOGGER.info("GERANDO NOVA VENDA: {}", i);
-                    var orderId = UUID.randomUUID().toString();
-                    var amount = Math.random() * 5000 + 1;
-                    var email = Math.random() + "@email.com";
-
-                    var order = new Order(orderId, email, BigDecimal.valueOf(amount));
-                    orderDispatcher.send("ECOMMERCE_NEW_ORDER",
-                            email,
-                            new Correlationid(NewOrderMain.class.getSimpleName()),
-                            order);
-
-                    var emailCode = "Thank you for order! We are processing your order";
-                    emailDispatcher.send("ECOMMERCE_SEND_EMAIL",
-                            email,
-                            new Correlationid(NewOrderMain.class.getSimpleName()),
-                            emailCode);
-                }
+                var order = new Order(orderId, email, BigDecimal.valueOf(amount));
+                orderDispatcher.send("ECOMMERCE_NEW_ORDER", email, new Correlationid(NewOrderMain.class.getSimpleName()), order);
             }
         }
     }
