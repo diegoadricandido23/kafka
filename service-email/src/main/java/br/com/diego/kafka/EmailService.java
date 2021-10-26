@@ -1,32 +1,26 @@
 package br.com.diego.kafka;
 
-import br.com.diego.kafka.consumer.KafkaService;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-public class EmailService {
+public class EmailService implements ConsumerService<String> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
-        var emailService = new EmailService();
-        try (final KafkaService kafkaService = new KafkaService(
-                EmailService.class.getSimpleName(),
-                "ECOMMERCE_SEND_EMAIL",
-                emailService::parse,
-                Map.of(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName()))) {
-            kafkaService.run();
-        }
+    public static void main(String[] args) {
+        new ServiceRunner(EmailService::new).start(5);
     }
 
-    private void parse(ConsumerRecord<String, Message<String>> record) {
+    public String getTopic() {
+        return "ECOMMERCE_SEND_EMAIL";
+    }
+
+    public String getConsumerGroup() {
+        return EmailService.class.getSimpleName();
+    }
+
+    public void parse(ConsumerRecord<String, Message<String>> record) {
         LOGGER.info("-------------------------");
         LOGGER.info("SENDING EMAIL, CHECKING FOR FRAUD");
         LOGGER.info("RECORD KEY: {}", record.key());//DEFINI EM QUAL PARTICAO IRA CAIR A MENSAGEM
