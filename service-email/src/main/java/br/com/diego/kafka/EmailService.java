@@ -11,7 +11,7 @@ public class EmailService implements ConsumerService<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
     public static void main(String[] args) {
-        new ServiceRunner(EmailService::new).start(5);
+        new ServiceRunner<>(EmailService::new).start(5);
     }
 
     public String getTopic() {

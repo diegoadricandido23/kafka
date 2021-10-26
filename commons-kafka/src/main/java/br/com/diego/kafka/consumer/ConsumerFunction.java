@@ -8,5 +8,5 @@ import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
 
 public interface ConsumerFunction<T> {
-    void consume(ConsumerRecord<String, Message<T>> record) throws IOException, ExecutionException, InterruptedException, SQLException;
+    void consume(ConsumerRecord<String, Message<T>> record) throws Exception;
 }

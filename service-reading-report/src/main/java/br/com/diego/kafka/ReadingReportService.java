@@ -20,7 +20,7 @@ public class ReadingReportService implements ConsumerService<User> {
     private static final Path SOURCE = Path.of("sr/main/resources/report.txt");
 
     public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
-        new ServiceRunner(ReadingReportService::new).start(5);
+        new ServiceRunner<>(ReadingReportService::new).start(5);
     }
 
     public void parse(ConsumerRecord<String, Message<User>> record) throws IOException {
