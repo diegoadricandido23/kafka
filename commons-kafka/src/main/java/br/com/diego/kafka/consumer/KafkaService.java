@@ -49,12 +49,12 @@ public class KafkaService<T> implements Closeable {
                 var records = consumer.poll(Duration.ofMillis(100));
                 if (!records.isEmpty()) {
                     LOGGER.info("FOUND {} RECORDS", records.count());
-                    records.forEach(record -> {
+                    records.forEach(myRecord -> {
                         try {
-                            parse.consume(record);
+                            parse.consume(myRecord);
                         } catch (Exception e) {
                             LOGGER.error(e.getMessage());
-                            var message = record.value();
+                            var message = myRecord.value();
                             try {
                                 deadLetter.send("ECOMMERCE_DEADLETTER",
                                         message.getId().toString(),

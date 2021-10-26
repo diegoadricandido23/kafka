@@ -12,14 +12,16 @@
     <name>ecommerce</name>
 
     <modules>
+        <module>commons-kafka</module>
+        <module>common-database</module>
         <module>service-email</module>
         <module>service-log</module>
         <module>service-new-order</module>
-        <module>commons-kafka</module>
         <module>service-fraud-detector</module>
         <module>service-reading-report</module>
         <module>service-users</module>
         <module>service-email-new-order</module>
+        <module>service-http-ecommerce</module>
     </modules>
 
     <properties>

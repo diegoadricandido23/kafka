@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>service-http-ecommerce</artifactId>
+    <artifactId>common-database</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -19,16 +19,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
-            <version>11.0.6</version>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.28.0</version>
         </dependency>
-        <dependency>
-            <groupId>br.com.diego.kafka</groupId>
-            <artifactId>commons-kafka</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
     </dependencies>
 
 </project>
