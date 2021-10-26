@@ -1,6 +1,5 @@
-package br.com.diego.kafka;
+package br.com.diego.kafka.consumer;
 
-import br.com.diego.kafka.consumer.KafkaService;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 

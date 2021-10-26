@@ -1,4 +1,4 @@
-package br.com.diego.kafka;
+package br.com.diego.kafka.consumer;
 
 import java.util.concurrent.Executors;
 
