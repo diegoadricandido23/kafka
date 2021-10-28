@@ -1,0 +1,5 @@
+br/com/diego/kafka/CreateUserService.class
+br/com/diego/kafka/User.class
+br/com/diego/kafka/Order.class
+br/com/diego/kafka/SQLConstantes.class
+br/com/diego/kafka/BatchSendMessageService.class

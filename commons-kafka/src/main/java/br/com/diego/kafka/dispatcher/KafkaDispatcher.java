@@ -28,7 +28,7 @@ public class KafkaDispatcher<T> implements Closeable {
         //O GET SEGURA O CONSUMIDOR
     }
 
-    Future<RecordMetadata> sendAsync(String topic, String key, Correlationid id, T payload) throws InterruptedException, ExecutionException {
+    public Future<RecordMetadata> sendAsync(String topic, String key, Correlationid id, T payload) {
         var value = new Message<>(id.continueWith("_"+topic), payload);
         var record = new ProducerRecord<>(topic, key, value);
         Callback callback = (data, ex) -> {

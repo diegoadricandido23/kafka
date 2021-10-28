@@ -1,0 +1,13 @@
+br/com/diego/kafka/dispatcher/GsonSerializer.class
+br/com/diego/kafka/consumer/KafkaService.class
+br/com/diego/kafka/consumer/ServiceFactory.class
+br/com/diego/kafka/consumer/ServiceProvider.class
+br/com/diego/kafka/Correlationid.class
+br/com/diego/kafka/MessageAdapter.class
+br/com/diego/kafka/consumer/ServiceRunner.class
+br/com/diego/kafka/consumer/ConsumerFunction.class
+br/com/diego/kafka/dispatcher/KafkaDispatcher.class
+br/com/diego/kafka/consumer/ConsumerService.class
+br/com/diego/kafka/Email.class
+br/com/diego/kafka/consumer/GsonDeserializer.class
+br/com/diego/kafka/Message.class

@@ -1,56 +1,39 @@
 package br.com.diego.kafka;
 
-import br.com.diego.kafka.consumer.KafkaService;
+import br.com.diego.kafka.consumer.ConsumerService;
+import br.com.diego.kafka.consumer.ServiceRunner;
 import br.com.diego.kafka.dispatcher.KafkaDispatcher;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
-public class BatchSendMessageService {
+public class BatchSendMessageService implements ConsumerService<User> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BatchSendMessageService.class);
-    private final Connection connection;
+    private final LocalDataBase dataBase;
     private final KafkaDispatcher<User> userDispatcher = new KafkaDispatcher<>();
 
     BatchSendMessageService() throws SQLException {
-        String url = "jdbc:sqlite:service-users/target/users_database.db";
-        this.connection = DriverManager.getConnection(url);
-        try {
-            connection.createStatement().execute("CREATE TABLE IF NOT EXISTS Users ("
-                    + "uuid varchar (200) primary key, "
-                    + "email varchar(200))");
-
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        }
+        this.dataBase = new LocalDataBase(SQLConstantes.DATABASE_NAME);
+        this.dataBase.createIfNotExistis(SQLConstantes.CREATE_TABLE);
     }
 
-    public static void main(String[] args) throws SQLException, ExecutionException, InterruptedException {
-        var batchService = new BatchSendMessageService();
-        try (var service = new KafkaService<>(BatchSendMessageService.class.getSimpleName(),
-                "ECOMMERCE_SEND_MESSAGE_TO_ALL_USERS",
-                batchService::parse,
-                Map.of())) {
-            service.run();
-        }
+    public static void main(String[] args) {
+        new ServiceRunner<>(BatchSendMessageService::new).start(1);
     }
 
-    private void parse(ConsumerRecord<String, Message<String>> record) throws ExecutionException, InterruptedException, SQLException {
+    public void parse(ConsumerRecord<String, Message<User>> record) throws SQLException {
         LOGGER.info("-------------------------");
         LOGGER.info("PROCESSING NEW BATCH");
         var message = record.value();
         LOGGER.info("TOPIC VAL: {}", message.getPayload());
 
         for(User user : getAllUsers()) {
-            userDispatcher.sendAsync(message.getPayload(),
+            userDispatcher.sendAsync(getTopic(),
                     user.getUuid(),
                     message.getId().continueWith(BatchSendMessageService.class.getSimpleName()),
                     user);
@@ -61,8 +44,18 @@ public class BatchSendMessageService {
         LOGGER.info("PROCESSADO COM SUCESSO");
     }
 
+    @Override
+    public String getTopic() {
+        return "ECOMMERCE_SEND_MESSAGE_TO_ALL_USERS";
+    }
+
+    @Override
+    public String getConsumerGroup() {
+        return BatchSendMessageService.class.getSimpleName();
+    }
+
     private List<User> getAllUsers() throws SQLException {
-        var results = connection.prepareStatement("SELECT UUID FROM USERS").executeQuery();
+        var results = dataBase.query(SQLConstantes.SELECT_ALL_USERS);
         List<User> users = new ArrayList<>();
         while (results.next()) {
             users.add(new User(results.getString(1)));

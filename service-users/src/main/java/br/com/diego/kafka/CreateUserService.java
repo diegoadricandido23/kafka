@@ -14,10 +14,8 @@ public class CreateUserService implements ConsumerService<Order> {
     private final LocalDataBase dataBase;
 
     CreateUserService() throws SQLException {
-        this.dataBase = new LocalDataBase("users_database");
-        this.dataBase.createIfNotExistis("CREATE TABLE IF NOT EXISTS Users ("
-                + "uuid varchar (200) primary key, "
-                + "email varchar(200))");
+        this.dataBase = new LocalDataBase(SQLConstantes.DATABASE_NAME);
+        this.dataBase.createIfNotExistis(SQLConstantes.CREATE_TABLE);
     }
 
     public static void main(String[] args) {
@@ -49,14 +47,13 @@ public class CreateUserService implements ConsumerService<Order> {
 
     private void insertNewUser(String email) throws SQLException {
         var uuid = UUID.randomUUID().toString();
-        this.dataBase.update("INSERT INTO USERS (uuid, email)" + " VALUES (?,?)", uuid, email);
+        this.dataBase.update(SQLConstantes.INSERT_USER, uuid, email);
 
         LOGGER.info("USUARIO {} E {} ADICIONADOS", uuid, email);
     }
 
     private boolean isNewUser(String email) throws SQLException {
-        var results = this.dataBase.query("SELECT uuid FROM USERS "
-                + "WHERE email =? LIMIT 1", email);
+        var results = this.dataBase.query(SQLConstantes.SELECT_USER_ID, email);
         return !results.next();
     }
 }

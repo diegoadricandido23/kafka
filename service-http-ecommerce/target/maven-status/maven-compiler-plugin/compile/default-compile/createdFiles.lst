@@ -1,0 +1,5 @@
+br/com/diego/kafka/Order.class
+br/com/diego/kafka/HttpEcommerceService.class
+br/com/diego/kafka/GenerateAllReportServlet.class
+br/com/diego/kafka/OrderDataBase.class
+br/com/diego/kafka/NewOrderServlet.class
